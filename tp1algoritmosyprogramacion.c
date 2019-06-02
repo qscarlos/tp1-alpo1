@@ -248,34 +248,19 @@ void validar_fecha (int *dia, int *mes, int *anio){
 	
 }
 
-void validar_sexo (char *sexo){
-
-	bool validado = true;
-
-	while (!validado){
+void validar_sexo (char *letra){
+	
+	while (( (*letra != 'f') && (*letra != 'F') ) && ( (*letra != 'm') && (*letra != 'M') )){
 		
-		switch (*sexo){
+		printf ("\n\tError...");
+		printf ("\n\t|-Reingrese sexo (M/F): ");
+		fflush (stdin);
+		scanf ("%c", letra);
 		
-			case 'M':
-			case 'm':
-			case 'F':
-			case 'f':
-				
-				validado = true;
-				break;
-				
-			default :
-				
-				printf ("\n|-Error..");
-				printf ("\n|-Reingrese sexo(M/F): ");
-				fflush (stdin);
-				scanf ("%c", sexo);
-				break;
-		}
-	}
 			
-	printf ("\n\t->sexo validado...\n");
-	printf("\n");
+	}
+	printf ("\n\t->sexo validado!\n");
+	printf ("\n");
 }
 	
 	
