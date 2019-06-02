@@ -17,8 +17,8 @@ typedef struct{
 
 typedef struct{
 	
-	char apeynombre[MAX];
-	
+	char nombre[MAX];
+	char apellido [MAX];
 	tfecha nacimiento;
 	
 	char sexo;
@@ -53,7 +53,7 @@ void menu (int ml, tvecempleados vemp, char apellido[]);
 		
 	float porcArgentinos (int ml, tvecempleados vemp);
 
-void mostrar_datos (int numero, char nombres[MAX], int dia, int mes, int anio, char sexo, tvecnaciones vecnaciones);
+void mostrar_datos (int numero, char apellido [MAX], char nombres[MAX], int dia, int mes, int anio, char sexo, tvecnaciones vecnaciones);
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +101,7 @@ void menu (int ml, tvecempleados vemp, char apellido[]){
 		printf ("\n|-seleccione la opcion a realizar o 0 para salir: ");
 		
 		scanf ("%i", &opcion);
-		printf ("\n\tValidando anio...\n");	
+		printf ("\n\tValidando opcion...\n");	
 		validar_datos (&opcion, 4, 0);
 	}
 	if (opcion == 0)
@@ -154,13 +154,20 @@ void cargar_datos (int *ml, tvecempleados vemp){
 	
 	do{
 		
-		printf ("|-Ingrese apellidos y nombres (apellido,+ nombre) o 'f' para finalizar: ");
+		
+		printf ("|-Ingrese nombres o 'f' para finalizar: ");
 		
 		fflush(stdin);
+		fgets (vemp[i].nombre, MAX, stdin);
 		
-		fgets (vemp[i].apeynombre, MAX, stdin);
 		
-		if (*vemp[i].apeynombre != 'f'){
+		
+		if (*vemp[i].nombre != 'f'){
+		
+			printf ("\n|-Ingrese apellidos: ");
+		
+			fflush(stdin);
+			fgets (vemp[i].apellido, MAX, stdin);
 			
 			printf ("\n|-Ingrese fecha de nacimiento (dd-mm-aa): ");
 			scanf ("%i %i %i", &vemp[i].nacimiento.dia, &vemp[i].nacimiento.mes, &vemp[i].nacimiento.anio);
@@ -184,7 +191,7 @@ void cargar_datos (int *ml, tvecempleados vemp){
 			i++;
 		}
 		
-	}while ((*vemp[i].apeynombre != 'f') && (i != MF));
+	}while ((*vemp[i].nombre != 'f') && (i != MF));
 	
 	*ml = i;
 }
@@ -322,18 +329,19 @@ void mostrarNacidosAntesdeDosmil (int ml, tvecempleados vemp){
 		if (vemp[i].nacimiento.anio < 2000)
 				
 			//	printf ("\n|-%i. %s ", i, vemp[i].apeynombre);
-			mostrar_datos (i, vemp[i].apeynombre, vemp[i].nacimiento.dia, vemp[i].nacimiento.mes, vemp[i].nacimiento.anio, vemp[i].sexo, vemp[i].vecnaciones);
+			mostrar_datos (i, vemp[i].apellido, vemp[i].nombre, vemp[i].nacimiento.dia, vemp[i].nacimiento.mes, vemp[i].nacimiento.anio, vemp[i].sexo, vemp[i].vecnaciones);
 	}
 	printf ("\n");		
 }
 
-void mostrar_datos (int numero, char nombres[MAX], int dia, int mes, int anio, char sexo, tvecnaciones vecnaciones){
+void mostrar_datos (int numero, char apellido[MAX], char nombre[MAX], int dia, int mes, int anio, char sexo, tvecnaciones vecnaciones){
 	
 	int j;
 		
 	printf ("|-%i.", (numero+1));
-	printf ("\t%s\t", nombres);
-	printf ("-%i", dia);
+	printf ("\t%s\t", apellido);
+	printf ("%s\t", nombre);
+	printf ("%i", dia);
 	printf ("-%i", mes);
 	printf ("-%i\t", anio);
 	printf ("%c\t", sexo);
@@ -413,11 +421,11 @@ void BuscaryMostrar_MujerVeranomismoApellido (int ml, tvecempleados vemp, char a
 	printf ("\n|-numero\t Apellidos y Nombres\t fecha de nacimiento\t  sexo\t  nacionalidades\n");
 	for ( i = 0; i <= ml; i++){
 									
-		posicion = strstr(vemp[i].apeynombre, apellido);
+		posicion = strstr(vemp[i].apellido, apellido);
 		
 		if ((posicion != NULL) && ( mujer_nacidaVerano(vemp[i].sexo, vemp[i].nacimiento.mes) == true)){
 
-			mostrar_datos (i, vemp[i].apeynombre, vemp[i].nacimiento.dia, vemp[i].nacimiento.mes, vemp[i].nacimiento.anio, vemp[i].sexo, vemp[i].vecnaciones);
+			mostrar_datos (i, vemp[i].apellido, vemp[i].nombre, vemp[i].nacimiento.dia, vemp[i].nacimiento.mes, vemp[i].nacimiento.anio, vemp[i].sexo, vemp[i].vecnaciones);
 			encontrada = true;
 		}
 	}
@@ -469,7 +477,7 @@ void mostrarUruyArgconmasdeunaNacionalidad (int ml, tvecempleados vemp){
 	
 		if (buscar_otraNacionalidad(MAxNAC, vemp[i].vecnaciones) == 0){
 				
-			mostrar_datos (i, vemp[i].apeynombre, vemp[i].nacimiento.dia, vemp[i].nacimiento.mes, vemp[i].nacimiento.anio, vemp[i].sexo, vemp[i].vecnaciones);
+			mostrar_datos (i, vemp[i].apellido, vemp[i].nombre, vemp[i].nacimiento.dia, vemp[i].nacimiento.mes, vemp[i].nacimiento.anio, vemp[i].sexo, vemp[i].vecnaciones);
 
 			printf ("\n");
 
