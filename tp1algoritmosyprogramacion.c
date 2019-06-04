@@ -51,9 +51,6 @@ void main (){
 	cargar_datos (&ml, vemp);
 	printf("\n");
 	system("pause");
-	
-	menu (ml, vemp, apellido);
-	
 }
 void cargar_datos (int *ml, tvecempleados vemp){
 	
