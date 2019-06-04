@@ -229,7 +229,7 @@ int MultUruOArg(int nac[])
 {
     int i;
     int cant = 0;
-    for(i = 0; i < 7; i++)
+    for(i = 0; i < MAxNAC; i++)
     {
         if(nac[i] == 1)
         {
