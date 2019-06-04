@@ -52,6 +52,81 @@ void main (){
 	printf("\n");
 	system("pause");
 }
+void menu (int ml, tvecempleados vemp, char apellido[]){
+	
+	int opcion;
+	printf ("\n\t\t\t|----MENU----|\n");
+	
+	printf ("1. Mostrar nacidos antes del 2000 ordenado por nacimiento.\n");
+	printf ("2. Buscar y mostrar datos de apellido de mujer ingresado por usuario, nacidas en verano.\n");
+	printf ("3. Mostrar Uruguayos y Argentinos con mas de 1 nacionalidad.\n");
+	printf ("4. Mostrar porcentaje de empleados Argentinos.\n");
+	printf ("0. salir.\n");
+	printf ("\n|-seleccione la opcion a realizar o 0 para salir: ");
+	
+	scanf ("%i", &opcion);
+	printf ("\n\tValidando opcion...\n");
+	validar_datos (&opcion, 4, 0);
+	
+	while (opcion != 0){
+		
+		opciones_Aejecutar (ml, vemp, apellido, opcion);
+		
+		printf ("\n\t\t\t|----MENU----|\n");
+	
+		printf ("1. Mostrar nacidos antes del 2000 ordenado por nacimiento.\n");
+		printf ("2. Buscar y mostrar datos de apellido de mujer ingresado por usuario, nacidas en verano.\n");
+		printf ("3. Mostrar Uruguayos y Argentinos con mas de 1 nacionalidad.\n");
+		printf ("4. Mostrar porcentaje de empleados Argentinos.\n");
+		printf ("0. salir.\n");
+		printf ("\n|-seleccione la opcion a realizar o 0 para salir: ");
+		
+		scanf ("%i", &opcion);
+		printf ("\n\tValidando opcion...\n");	
+		validar_datos (&opcion, 4, 0);
+	}
+	if (opcion == 0)
+		
+			printf ("\n\t\tAdios!!...\n");
+		
+	system ("pause");
+}
+void opciones_Aejecutar (int ml, tvecempleados vemp, char apellido[], int opc){
+	
+	switch (opc) {
+		case 1:
+		
+			ordenar_porNacimiento (ml, vemp);//falta
+			printf ("\n");
+		
+			mostrarNacidosAntesdeDosmil (ml, vemp);	
+			system("pause");
+				
+			break;
+		case 2:
+			
+			printf ("\n|-Ingrese apellido a buscar: ");
+			fflush (stdin);	
+			fgets (apellido, MAX, stdin);
+	
+			BuscaryMostrar_MujerVeranomismoApellido (ml, vemp, apellido);
+			system("pause");
+		
+			break;
+		case 3:
+			
+			mostrarUruyArgconmasdeunaNacionalidad (ml, vemp);
+			system("pause");
+				
+			break;
+		case 4:
+					
+			printf ("\n|-Porcentaje de empleados Argentinos: %f", porcArgentinos(ml, vemp));
+			printf ("\n");
+			break;
+	}
+}
+
 void cargar_datos (int *ml, tvecempleados vemp){
 	
 	int i;
