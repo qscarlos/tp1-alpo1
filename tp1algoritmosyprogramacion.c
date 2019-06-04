@@ -245,14 +245,14 @@ int MultUruOArg(int nac[])
 
 }
 
-void MostrarEmpAU(Empleado Emp[],int ML)
+void MostrarEmpAU(tvecempleados Emps,int ML)
 {
     int i;
     for(i = 0; i < ML; i++)
     {
-        if(MultUruOArg(Emp[i].nacionalidad) == 1)
+        if(MultUruOArg(Emps[i].vecnaciones) == 1)
         {
-            MostrarEmpleado(Emp[i]);
+            MostrarEmpleado(Emps[i]);
         }
     }
 }
