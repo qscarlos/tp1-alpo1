@@ -223,3 +223,36 @@ float porcArgentinos (int ml, tvecempleados vemp){
 	
 	return ((cant_Arg/ml)*100);
 }
+
+
+int MultUruOArg(int nac[])
+{
+    int i;
+    int cant = 0;
+    for(i = 0; i < 7; i++)
+    {
+        if(nac[i] == 1)
+        {
+            cant++;
+        }
+        if((nac[0] == 1 || nac[6] == 1) && cant >= 2)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+
+}
+
+void MostrarEmpAU(Empleado Emp[],int ML)
+{
+    int i;
+    for(i = 0; i < ML; i++)
+    {
+        if(MultUruOArg(Emp[i].nacionalidad) == 1)
+        {
+            MostrarEmpleado(Emp[i]);
+        }
+    }
+}
