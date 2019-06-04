@@ -6,7 +6,7 @@
 #define MAxNAC 8
 
 typedef enum {false, true} bool;
-typedef enum  {argentina = 1, uruguaya, chilena, peruana, boliviana, paraguaya, brasilenia}naciones;
+enum  {argentina = 1, uruguaya, chilena, peruana, boliviana, paraguaya, brasilenia}naciones;
 typedef int tvecnaciones [MAxNAC];
 
 //typedef tnacion vecnacion[7];
