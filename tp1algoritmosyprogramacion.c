@@ -224,6 +224,47 @@ float porcArgentinos (int ml, tvecempleados vemp){
 	return ((cant_Arg/ml)*100);
 }
 
+const char* DameNacionalidad(int i)
+{
+    const char* Nacionalidades[] = {"Argentina","Bolivia","Brasilenia","Chilena","Paraguaya","Peruana","Uruguaya"};
+    return Nacionalidades[i];
+}
+
+void NumANacionalidad(int nac[], char* Nacs)
+{
+    int i;
+    int index = 0;
+    for (i = 0; i < 7; i++)
+    {
+        if(nac[i] == 1)
+        {
+            if(index > 0)
+            {
+                Nacs[index] = ',';
+                index++;
+                Nacs[index] = ' ';
+                index++;
+            }
+            const char* nacstr = DameNacionalidad(i);
+            strcpy(Nacs + index, nacstr);
+            index += strlen(nacstr);
+        }
+    }
+    Nacs[index] = '\0';
+}
+
+void MostrarEmpleado(templeado Emp)
+{
+    char* sexostr[] = {"masculino","femenino"};
+    int sexoIndex = (Emp.sexo == 'm') ? 0 : 1;
+    char Nacs[100];
+    NumANacionalidad(Emp.vecnaciones, Nacs);
+
+    printf("El empleado es: %s %s, ", Emp.apellido, Emp.nombre);
+    printf("nacio en la fecha %d - %d - %d, ", Emp.fnacimiento.dia, Emp.fnacimiento.mes, Emp.fnacimiento.anio);
+    printf("es de sexo %s ", sexostr[sexoIndex]);
+    printf("y es de nacionalidad %s.\n", Nacs);
+}
 
 int MultUruOArg(int nac[])
 {
