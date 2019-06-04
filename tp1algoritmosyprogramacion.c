@@ -372,3 +372,47 @@ void MostrarEmpAU(tvecempleados Emps,int ML)
         }
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////
+
+int nacidosenverano(tvecempleados emp)
+{
+	int i;
+	if (emp[i].nacimiento.mes <= 3 || emp[i].nacimiento.mes == 12)
+	{
+		if (emp[i].nacimiento.mes == 3)
+		{
+			if (emp[i].nacimiento.dia < 21)
+				return 0;
+		}
+		else if (emp[i].nacimiento.mes == 12)
+		{
+			if (emp[i].nacimiento.dia >= 21)
+				return 0;
+		}
+		else if ((emp[i].nacimiento.mes == 1) && (emp[i].nacimiento.mes == 2))
+			return 0;
+	}
+	else return 1;
+}
+
+void mujeresmismoapellido (tvecempleados emp, int ml)
+{
+	int i;
+	char apellidoaux[MAX];
+	char busqueda;
+	
+	printf("Ingrese un apellido para buscar coincidencias\n");
+	scanf("%s", apellidoaux);	
+	
+	for(i=0; i<=ml; i++)
+	{
+	int verano;
+	busqueda = strstr (emp[i].apellido, apellidoaux);
+	verano = nacidosenverano (emp);
+	if (busqueda != 0 && ((emp[i].sexo == 'f') || (emp[i].sexo == 'F')) && (verano == 1))
+		////////MOSTRAR DATOS/////////;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
