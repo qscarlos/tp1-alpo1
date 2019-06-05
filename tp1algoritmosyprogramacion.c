@@ -635,7 +635,7 @@ void mujeresmismoapellido (tvecempleados emp, int ml, apellidoaux)
 	for(i=0; i<=ml; i++)
 	{
 	busqueda = strstr (emp[i].apellido, apellidoaux);
-	if (bool muj_no_nac_vera == false)
+	if (emp.muj_no_nac_vera == false)
 		{	
 			mostrar_vector (emp, 0, ml, dato_muj_no_nac_vera);	
 		}
