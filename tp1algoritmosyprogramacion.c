@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #define MF 500
-#define MAX 50
+#define MAX 100
 #define MAX_NAC 8
 #define MAX_FECHA 11
 #define mayor_2000 "2000-01-01"
@@ -23,12 +24,14 @@
 #define min_pos_vec 0
 
 typedef enum {false, true} bool;
-enum  {argentina = 1, uruguaya, chilena, peruana, boliviana, paraguaya, brasilenia}naciones;
+
+enum {argentina = 1, uruguaya, chilena, peruana, boliviana, paraguaya, brasilera} naciones;
+
 typedef enum { apellido_nombre, fecha, sexo, ciudadania, nac_mayor_2000, arg_uru_1nac, muj_no_nac_vera } dato;
-typedef int tvecnaciones [MAxNAC];
+
+typedef int tvecnaciones [MAX_NAC];
 
 //typedef tnacion vecnacion[7];
-
 typedef struct{
 	
 	char apellido_nombre[MAX];
@@ -43,125 +46,6 @@ typedef struct{
 }templeado;
 
 typedef templeado tvecempleados[MF];
-
-/////////////////////////////////////////////////////////////////////////////
-
-void cargar_datos (int *ml, tvecempleados vemp);
-
-	void validar_fecha (int *dia, int *mes, int *anio);
-	void validar_sexo (char *sexo);
-	void obtener_nacionalidad (tvecnaciones vecnaciones);
-	void validar_datos (int *num, int max, int min);
-        int pasar_texto_a_entero (char texto[MAX_FECHA], int min, int max);
-        void pasar_enteros_a_validar (char texto[MAX_FECHA], bool *estacion_verano);
-        bool validar_dato_booleano (templeado emp, bool verano_si, dato var);
-float porcArgentinos (int ml, tvecempleados vemp);
-void ordenar_vector (tvecempleados emp, int minimo, int maximo, dato dat);
-void mostrar_vector (tvecempleados emp, int cant_min, int cant_max);
-
-/////////////////////////////////////////////////////////////////////////////
-
-void main (){
-	
-	int ml, cant_antes_2000, cant_arg_uru_2nacio, cant_F_nacidas_ver, cant_arg;
-	tvecempleados vemp;
-	
-	//Punto A
-	cargar_datos (&ml, &cant_antes_2000, &cant_arg, &cant_arg_uru_2nacio, &cant_F_nacidas_ver, vemp);
-	
-	//Punto B
-	ordenar_vector (vemp, min_pos_vec, ml, dato_nac_mayor_2000);
-	ordenar_vector (vemp, min_pos_vec, cant_antes_2000, dato_fecha);
-	mostrar_vector (vemp, min_pos_vec, cant_antes_2000);
-	
-	//Punto C
-	mostrar_vector (vemp, min_pos_vec, ml, dato_muj_no_nac_vera);
-	
-	//Punto D
-	
-	ordenar_vector (vemp, min_pos_vec, ml, dato_arg_uru_1nac);
-	mostrar_vector (vemp, min_pos_vec, cant_arg_uru_2nacio);
-	
-	//Punto E
-	
-	indicar_porcentaje_empleados_arg (cant_arg, ml);
-	printf("\n");
-	system("pause");
-}
-void menu (int ml, tvecempleados vemp, char apellido[]){
-	
-	int opcion;
-	printf ("\n\t\t\t|----MENU----|\n");
-	
-	printf ("1. Mostrar nacidos antes del 2000 ordenado por nacimiento.\n");
-	printf ("2. Buscar y mostrar datos de apellido de mujer ingresado por usuario, nacidas en verano.\n");
-	printf ("3. Mostrar Uruguayos y Argentinos con mas de 1 nacionalidad.\n");
-	printf ("4. Mostrar porcentaje de empleados Argentinos.\n");
-	printf ("0. salir.\n");
-	printf ("\n|-seleccione la opcion a realizar o 0 para salir: ");
-	
-	scanf ("%i", &opcion);
-	printf ("\n\tValidando opcion...\n");
-	validar_datos (&opcion, 4, 0);
-	
-	while (opcion != 0){
-		
-		opciones_Aejecutar (ml, vemp, apellido, opcion);
-		
-		printf ("\n\t\t\t|----MENU----|\n");
-	
-		printf ("1. Mostrar nacidos antes del 2000 ordenado por nacimiento.\n");
-		printf ("2. Buscar y mostrar datos de apellido de mujer ingresado por usuario, nacidas en verano.\n");
-		printf ("3. Mostrar Uruguayos y Argentinos con mas de 1 nacionalidad.\n");
-		printf ("4. Mostrar porcentaje de empleados Argentinos.\n");
-		printf ("0. salir.\n");
-		printf ("\n|-seleccione la opcion a realizar o 0 para salir: ");
-		
-		scanf ("%i", &opcion);
-		printf ("\n\tValidando opcion...\n");	
-		validar_datos (&opcion, 4, 0);
-	}
-	if (opcion == 0)
-		
-			printf ("\n\t\tAdios!!...\n");
-		
-	system ("pause");
-}
-void opciones_Aejecutar (int ml, tvecempleados vemp, char apellido[], int opc){
-	
-	switch (opc) {
-		case 1:
-		
-			ordenar_porNacimiento (ml, vemp);//falta
-			printf ("\n");
-		
-			mostrarNacidosAntesdeDosmil (ml, vemp);	
-			system("pause");
-				
-			break;
-		case 2:
-			
-			printf ("\n|-Ingrese apellido a buscar: ");
-			fflush (stdin);	
-			fgets (apellido, MAX, stdin);
-	
-			mujeresmismoapellido (ml, vemp, apellido);
-			system("pause");
-		
-			break;
-		case 3:
-			
-			mostrarUruyArgconmasdeunaNacionalidad (ml, vemp);
-			system("pause");
-				
-			break;
-		case 4:
-					
-			printf ("\n|-Porcentaje de empleados Argentinos: %f", porcArgentinos(ml, vemp));
-			printf ("\n");
-			break;
-	}
-}
 
 int pasar_texto_a_entero (char texto[MAX_FECHA], int min, int max){
 	
@@ -179,6 +63,58 @@ int pasar_texto_a_entero (char texto[MAX_FECHA], int min, int max){
 	texto_int=atoi(texto_carac);
 	
 	return texto_int;
+}
+
+void validar_datos (int *num, int max, int min){
+	
+	while ((*num < min) || (*num > max)){
+		
+		printf ("\n\t|-Error...");
+		printf ("\n\t|-Reingrese datos: ");
+		fflush(stdin);
+		scanf ("%d", num);
+	}
+	printf ("\n\t->Datos validados!\n");
+}
+
+void validar_fecha (int *dia, int *mes, int *anio){
+	
+	printf ("\n\tValidando anio...\n");
+	validar_datos (anio, 2003, 1949);
+	
+	printf ("\n\tValidando mes...\n");
+	validar_datos (mes, 12, 1);	
+	
+	switch (*mes){
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:	
+			printf ("\n\tValidando dia...\n");
+			validar_datos (dia, 31, 1);
+			break;
+		case 2:
+			if ((((*anio) % 4 == 0) && ((*anio) % 100 != 0)) || ((*anio) % 400 == 0)){
+				
+				printf ("\n\tValidando dia...\n");
+				validar_datos (dia, 29, 1);
+			}else{
+				
+				printf ("\n\tValidando dia...\n");	
+				validar_datos (dia, 28, 1);
+			}
+			break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			printf ("\n\tValidando dia...\n");
+			validar_datos (dia, 30, 1);
+			break;
+	}
 }
 
 void pasar_enteros_a_validar (char texto[MAX_FECHA], bool *estacion_verano) {
@@ -225,6 +161,59 @@ void pasar_enteros_a_validar (char texto[MAX_FECHA], bool *estacion_verano) {
 	
 	strcpy(texto, aux_fecha);
 	
+}
+
+void validar_sexo (char *letra){
+	
+	while (( (*letra != 'f') && (*letra != 'F') ) && ( (*letra != 'm') && (*letra != 'M') )){
+		
+		printf ("\n\tError...");
+		printf ("\n\t|-Reingrese sexo (M/F): ");
+		fflush (stdin);
+		scanf ("%c", letra);
+		
+			
+	}
+	printf ("\n\t->sexo validado!\n");
+	printf ("\n");
+}
+
+void obtener_nacionalidad(tvecnaciones vecnaciones){
+	
+	int opc,i;
+	
+	for (i = 0; i < MAX_NAC; i++)
+	{
+			vecnaciones[i] = 0;
+	}
+	
+	printf ("\n|-Nacionalidades: ");
+	printf ("\n1. Argentina");
+	printf ("\n2. Uruguaya");
+	printf ("\n3. Chilena");
+	printf ("\n4. Peruana");
+	printf ("\n5. Boliviana");
+	printf ("\n6. Paraguaya");
+	printf ("\n7. Brasilera");
+	printf ("\n0. salir");
+		
+	printf ("\n|-Elija las nacionalidades o 0 para salir: ");
+	fflush (stdin);
+	scanf ("%i", &opc);
+	
+	printf ("\nValidando opcion...\n");
+	validar_datos (&opc, MAX_NAC, 0);
+	
+	while (opc != 0){
+		
+		vecnaciones[opc] = 1;
+    //		cant_nac = cant_nac + 1;		
+		printf ("\n|-Elija otra nacionalidad o 0 para salir: ");
+		fflush (stdin);
+		scanf ("%i", &opc);
+		validar_datos (&opc, MAX_NAC, 0);	
+	}
+	printf ("\n");
 }
 
 bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
@@ -276,26 +265,26 @@ bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
 	
 	return aux_bool;
 }
+
 void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, int *cant_2nacio, int *cant_F_verano, tvecempleados vemp){
 	
-	int i=0,cant_mas_jovenes2000=0, cant_argentinos=0, cant_arg_uru=0, cant_muj_verano=0;
+	int i=0, cant_mas_jovenes2000=0, cant_argentinos=0, cant_arg_uru=0, cant_muj_verano=0;
 	bool es_verano=false;
 	char fecha[MAX_FECHA];
 	
 	do{
 		
-		
-		printf ("|-Ingrese el/los apellido/s y el/los nombre/s del empleado (coloque 'f' para finalizar la carga): ");
+		printf ("|-Ingrese el/los apellido/s y el/los nombre/s del empleado (coloque 'f' para finalizar la carga):\n");
 		
 		fflush(stdin);
 		fgets (vemp[i].apellido_nombre, MAX, stdin);
 		
+		if (*vemp[i].apellido_nombre != 'f'){
 		
-		
-		if (*vemp[i].nombre != 'f'){
-		
-			printf ("\n|-Ingrese fecha de nacimiento (aaaa-mm-dd): ");
-			fgets (fecha, MAX_FECHA, stdin);
+			fflush(stdin);
+			
+			printf ("\n|-Ingrese fecha de nacimiento (aaaa-mm-dd): \n");
+			fgets (fecha, MAX, stdin);
 			pasar_enteros_a_validar(fecha, &es_verano);
 			strcpy(vemp[i].nacimiento, fecha);
 			printf ("\n");	
@@ -305,14 +294,11 @@ void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, i
 				
 				cant_mas_jovenes2000++;
 			}
-			printf ("\n");	
-			system("pause");
 			
-			printf ("\n|-Ingrese sexo (M/F): ");
+			printf ("\n|-Ingrese sexo (M/F): \n");
 			fflush (stdin);
 			scanf("%c", &vemp[i].sexo);
 			
-			printf ("\n|-Validando sexo...\n");
 			validar_sexo (&vemp[i].sexo);
 			
 			vemp[i].muj_no_nac_vera=validar_dato_booleano(vemp[i], es_verano, dato_muj_no_nac_vera);
@@ -320,8 +306,6 @@ void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, i
 				
 				cant_muj_verano++;
 			}
-			
-			system ("pause");
 			
 			obtener_nacionalidad(vemp[i].vecnaciones);
 			
@@ -339,119 +323,13 @@ void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, i
 			i++;
 		}
 		
-	}while ((*vemp[i].nombre != 'f') && (i != MF));
+	}while ((*vemp[i].apellido_nombre != 'f') && (i != MF));
 	
-        *ml = i-1;
+	*ml = i-1;
 	*cantidad_nacidos_antes_2000=cant_mas_jovenes2000-1;
 	*cant_2nacio=cant_arg_uru-1;
 	*cant_F_verano=cant_muj_verano-1;
 	*cant_argen=cant_argentinos;
-}
-void validar_datos (int *num, int max, int min){
-	
-	while ((*num < min) || (*num > max)){
-		
-		printf ("\n\t|-Error...");
-		printf ("\n\t|-Reingrese datos: ");
-		fflush(stdin);
-		scanf ("%i", num);
-	}
-	printf ("\n\t->Datos validados!\n");
-}
-
-void validar_fecha (int *dia, int *mes, int *anio){
-	
-	printf ("\n\tValidando anio...\n");
-	validar_datos (anio, 100000, 0);
-	
-	printf ("\n\tValidando mes...\n");
-	validar_datos (mes, 12, 1);	
-	
-	switch (*mes){
-		case 1:
-		case 3:
-		case 5:
-		case 7:
-		case 8:
-		case 10:
-		case 12:	
-			printf ("\n\tValidando dia...\n");
-			validar_datos (dia, 31, 1);
-			break;
-		case 2:
-			if ((((*anio) % 4 == 0) && ((*anio) % 100 != 0)) || ((*anio) % 400 == 0)){
-				
-				printf ("\n\tValidando dia...\n");
-				validar_datos (dia, 29, 1);
-			}else{
-				
-				printf ("\n\tValidando dia...\n");	
-				validar_datos (dia, 28, 1);
-			}
-			break;
-		case 4:
-		case 6:
-		case 9:
-		case 11:
-			printf ("\n\tValidando dia...\n");
-			validar_datos (dia, 30, 1);
-			break;
-	}
-	
-}
-
-void validar_sexo (char *letra){
-	
-	while (( (*letra != 'f') && (*letra != 'F') ) && ( (*letra != 'm') && (*letra != 'M') )){
-		
-		printf ("\n\tError...");
-		printf ("\n\t|-Reingrese sexo (M/F): ");
-		fflush (stdin);
-		scanf ("%c", letra);
-		
-			
-	}
-	printf ("\n\t->sexo validado!\n");
-	printf ("\n");
-}
-	
-	
-void obtener_nacionalidad(tvecnaciones vecnaciones){
-	
-	int opc,i;
-	
-	for (i = 0; i < MAxNAC; i++)
-	{
-			vecnaciones[i] = 0;
-	}
-	
-	printf ("\n|-Nacionalidades: ");
-	printf ("\n1. Argentina");
-	printf ("\n2. Uruguaya");
-	printf ("\n3. Chilena");
-	printf ("\n4. Peruana");
-	printf ("\n5. Boliviana");
-	printf ("\n6. Paraguaya");
-	printf ("\n7. Brasilenia");
-	printf ("\n0. salir");
-		
-	printf ("\n|-Elija las nacionalidades o 0 para salir: ");
-	fflush (stdin);
-	scanf ("%i", &opc);
-	
-	printf ("\nValidando opcion...\n");
-	validar_datos (&opc, MAxNAC, 0);
-	
-	while (opc != 0){
-		
-		vecnaciones[opc] = 1;
-//		cant_nac = cant_nac + 1;		
-		printf ("\n|-Elija otra nacionalidad o 0 para salir: ");
-		fflush (stdin);
-		scanf ("%i", &opc);
-		validar_datos (&opc, MAxNAC, 0);	
-	}
-	printf ("\n");	
 }
 
 void ordenar_vector (tvecempleados emp, int minimo, int maximo, dato dat) {
@@ -485,10 +363,41 @@ void ordenar_vector (tvecempleados emp, int minimo, int maximo, dato dat) {
 	}
 }
 
+void mostrar_nacionalidad (templeado emp) {
+	
+	int i, j=0, k;
+	tvecnaciones aux_nac;
+	
+	for (i=1; i<MAX_NAC; i++){
+		
+		if (emp.vecnaciones[i]==true){
+			
+			aux_nac[j]=i;
+			j++;
+		}
+	}
+	
+	printf("Nacionalidad/es: ");
+	
+	for (k=0; k<j; k++){
+		
+		printf("%s ", ((aux_nac[k]==1) ? print_arg : (aux_nac[k]==2) ? print_uru : (aux_nac[k]==3) ? print_chi : 
+		(aux_nac[k]==4) ? print_per : (aux_nac[k]==5) ? print_bol : (aux_nac[k]==6) ? print_par : print_bra));
+	}
+	
+	for (k=0; k<j; k++){
+		
+		aux_nac[k]=false;
+	}
+	
+	j=0;
+}
+
 void mostrar_vector (tvecempleados emp, int cant_min, int cant_max){
 	
-	int i, j, k=0, l;
-	tvecnaciones aux_nac;
+	int i;
+	
+	printf("\n");
 	
 	if (cant_max>=0) {
 		
@@ -499,25 +408,10 @@ void mostrar_vector (tvecempleados emp, int cant_min, int cant_max){
 		    printf("Fecha de nacimiento: %s\n", emp[i].nacimiento);
 		
 		    printf("Sexo: %c\n", emp[i].sexo);
-		
-		    for (j=1; j<MAX_NAC; j++){
-		    	
-		    	if (emp[i].vecnaciones[j]==true){
-		    		
-		    		aux_nac[k]=j;
-		    		k++;
-				}
-			}
+		    
+		    mostrar_nacionalidad (emp[i]);
 			
-			printf("Nacionalidad/es: ");
-			
-			for (l=0; l<k; l++){
-				
-				printf("%s ", ((aux_nac[l]==argentina) ? print_arg : (aux_nac[l]==uruguaya) ? print_uru : (aux_nac[l]==chilena) ? print_chi : 
-				(aux_nac[l]==peruana) ? print_per : (aux_nac[l]==boliviana) ? print_bol : (aux_nac==paraguaya) ? print_par : print_bra));
-			}
-			
-			printf("\n");
+			printf("\n\n");
 		}
 	}
 	
@@ -527,118 +421,124 @@ void mostrar_vector (tvecempleados emp, int cant_min, int cant_max){
 	}
 }
 
-void indicar_porcentaje_empleados_arg (int cantidad_arg, int max_logic){
+void elegir_opcion (int *opcion){
 	
-	float porcentaje;
-	int total=max_logic+1;
+	int aux_opcion;
+	printf ("\n\t\t\t|----MENU----|\n");
 	
-	porcentaje=(((float) cantidad_arg)/((float)total))*100;
+	printf ("1. Mostrar nacidos antes del 2000 ordenado por nacimiento.\n");
+	printf ("2. Buscar y mostrar datos de apellido de mujer ingresado por usuario, nacidas en verano.\n");
+	printf ("3. Mostrar Uruguayos y Argentinos con mas de 1 nacionalidad.\n");
+	printf ("4. Mostrar porcentaje de empleados Argentinos.\n");
+	printf ("0. salir.\n");
+	printf ("\n|-seleccione la opcion a realizar o 0 para salir: ");
 	
-	printf("Hay un %.2f%% de argentinos sobre el total de empleados\n", porcentaje);
+	scanf ("%i", &aux_opcion);
+	printf ("\n\tValidando opcion...\n");
+	validar_datos (&aux_opcion, 4, 0);
+	
+	*opcion=aux_opcion;
 }
-
-float porcArgentinos (int ml, tvecempleados vemp){
 	
-	int i, cant_Arg;
+void buscar_por_apellido (tvecempleados emp, int ml, int cant_F_nacidas_ver){
 	
-	cant_Arg = 0;
+	int i=0, j=-1;
+	char aux_apellido[MAX];
+	int min, max;
+	bool es_igual=false;
 	
-	for ( i = 0; i < ml; i++){
+	ordenar_vector (emp, min_pos_vec, ml, dato_muj_no_nac_vera);
+	ordenar_vector (emp, min_pos_vec, cant_F_nacidas_ver, dato_ape_nomb);
+	
+	printf("\nIngrese un apellido para buscar coincidencias:\n");
+	fflush(stdin);
+	fgets(aux_apellido, MAX, stdin);	
+	
+	while ((i<cant_F_nacidas_ver) && (es_igual==false)){
 		
-		if (vemp[i].vecnaciones[argentina] == 1)//me toma solo argentina, si elijo 2 nacionalidades ej arg y urug y urug y chil no me toma el porcentaje de el primero arg.
+		if (strstr(aux_apellido, emp[i].apellido_nombre)!=0){
 			
-				cant_Arg++;	
-	}
-	
-	return ((cant_Arg/ml)*100);
-}
-
-const char* DameNacionalidad(int i)
-{
-    const char* Nacionalidades[] = {"Argentina","Bolivia","Brasilenia","Chilena","Paraguaya","Peruana","Uruguaya"};
-    return Nacionalidades[i];
-}
-
-void NumANacionalidad(int nac[], char* Nacs)
-{
-    int i;
-    int index = 0;
-    for (i = 0; i < 7; i++)
-    {
-        if(nac[i] == 1)
-        {
-            if(index > 0)
-            {
-                Nacs[index] = ',';
-                index++;
-                Nacs[index] = ' ';
-                index++;
-            }
-            const char* nacstr = DameNacionalidad(i);
-            strcpy(Nacs + index, nacstr);
-            index += strlen(nacstr);
-        }
-    }
-    Nacs[index] = '\0';
-}
-
-void MostrarEmpleado(templeado Emp)
-{
-    char* sexostr[] = {"masculino","femenino"};
-    int sexoIndex = (Emp.sexo == 'm') ? 0 : 1;
-    char Nacs[100];
-    NumANacionalidad(Emp.vecnaciones, Nacs);
-
-    printf("El empleado es: %s %s, ", Emp.apellido, Emp.nombre);
-    printf("nacio en la fecha %d - %d - %d, ", Emp.fnacimiento.dia, Emp.fnacimiento.mes, Emp.fnacimiento.anio);
-    printf("es de sexo %s ", sexostr[sexoIndex]);
-    printf("y es de nacionalidad %s.\n", Nacs);
-}
-
-int MultUruOArg(int nac[])
-{
-    int i;
-    int cant = 0;
-    for(i = 0; i < MAxNAC; i++)
-    {
-        if(nac[i] == 1)
-        {
-            cant++;
-        }
-        if((nac[0] == 1 || nac[6] == 1) && cant >= 2)
-        {
-            return 1;
-        }
-    }
-
-    return 0;
-
-}
-
-void MostrarEmpAU(tvecempleados Emps,int ML)
-{
-    int i;
-    for(i = 0; i < ML; i++)
-    {
-        if(MultUruOArg(Emps[i].vecnaciones) == 1)
-        {
-            MostrarEmpleado(Emps[i]);
-        }
-    }
-}
-
-void mujeresmismoapellido (tvecempleados emp, int ml, apellidoaux)
-{
-	int i;
-	char busqueda;
-	
-	for(i=0; i<=ml; i++)
-	{
-	busqueda = strstr (emp[i].apellido, apellidoaux);
-	if (emp.muj_no_nac_vera == false)
-		{	
-			mostrar_vector (emp, 0, ml, dato_muj_no_nac_vera);	
+			j=i;
+			es_igual=true;
+			
+			while ((j<cant_F_nacidas_ver) && (es_igual==true)){
+				
+				if (strstr(aux_apellido, emp[j].apellido_nombre)!=0){
+					
+					j++;
+				}
+				
+				else{
+					
+					es_igual=false;
+				}
+			}
+		}
+		
+		else{
+			
+			i++;
 		}
 	}
+	
+	mostrar_vector (emp, i, j);
 }
 
+void opciones_a_ejecutar (int ml, int cant_antes_2000, int cant_arg_uru_2nacio, int cant_F_nacidas_ver, int cant_arg, tvecempleados emp, int opcion) {
+	
+	int pos_minima=-1, pos_maxima=-1;
+	float porcentaje;
+	int total=ml+1;
+	
+	switch (opcion) {
+		
+		case 1:
+			
+			ordenar_vector (emp, min_pos_vec, ml, dato_nac_mayor_2000);
+			ordenar_vector (emp, min_pos_vec, cant_antes_2000, dato_fecha);
+			mostrar_vector (emp, min_pos_vec, cant_antes_2000);
+			break;
+			
+		case 2:  
+		
+		    buscar_por_apellido(emp, ml, cant_F_nacidas_ver);
+			break;
+			
+		case 3:
+			
+			ordenar_vector (emp, min_pos_vec, ml, dato_arg_uru_1nac);
+			mostrar_vector (emp, min_pos_vec, cant_arg_uru_2nacio);
+			break;
+			
+		case 4:
+			
+			porcentaje=(((float) cant_arg)/((float)total))*100;
+			printf("\nHay un %.2f%% de argentinos sobre el total de empleados.\n", porcentaje);
+			break;
+			
+		default:
+			
+			printf ("\n\t\tAdios!!...\n");
+			break;
+	}
+}
+
+int main (){
+	
+	int ml, cant_antes_2000, cant_arg_uru_2nacio, cant_F_nacidas_ver, cant_arg; 
+	int opciones;
+	int pos_minima, pos_maxima;
+	tvecempleados vemp;
+	
+	cargar_datos (&ml, &cant_antes_2000, &cant_arg, &cant_arg_uru_2nacio, &cant_F_nacidas_ver, vemp);
+	
+	do{
+		
+		elegir_opcion (&opciones);
+		
+		opciones_a_ejecutar (ml, cant_antes_2000, cant_arg_uru_2nacio, cant_F_nacidas_ver, cant_arg, vemp, opciones);
+		
+	} while (opciones!=0);
+	
+	return 0;
+}
