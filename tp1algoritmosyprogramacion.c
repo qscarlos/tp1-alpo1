@@ -206,8 +206,9 @@ void obtener_nacionalidad(tvecnaciones vecnaciones){
 	
 	while (opc != 0){
 		
+		printf ("\n|-Elija las nacionalidades o 0 para salir: ");
 		vecnaciones[opc] = 1;
-                fflush (stdin);
+        fflush (stdin);
 		scanf ("%i", &opc);
 		validar_datos (&opc, MAX_NAC, 0);	
 	}
