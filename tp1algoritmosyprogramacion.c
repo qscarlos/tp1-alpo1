@@ -8,12 +8,13 @@
 #define MAX_FECHA 11
 #define mayor_2000 "2000-01-01"
 #define dato_ape_nomb 0
-#define dato_fecha 1
-#define dato_sexo 2
-#define dato_nac 3
-#define dato_nac_mayor_2000 4
-#define dato_arg_uru_1nac 5
-#define dato_muj_no_nac_vera 6
+#define dato_ape 1
+#define dato_fecha 2
+#define dato_sexo 3
+#define dato_nac 4
+#define dato_nac_mayor_2000 5
+#define dato_arg_uru_1nac 6
+#define dato_muj_no_nac_vera 7
 #define print_arg "argentina"
 #define print_uru "uruguaya"
 #define print_chi "chilena"
@@ -27,7 +28,7 @@ typedef enum {false, true} bool;
 
 enum {argentina = 1, uruguaya, chilena, peruana, boliviana, paraguaya, brasilera} naciones;
 
-typedef enum { apellido_nombre, fecha, sexo, ciudadania, nac_mayor_2000, arg_uru_1nac, muj_no_nac_vera } dato;
+typedef enum { apellido_nombre, apellido, fecha, sexo, ciudadania, nac_mayor_2000, arg_uru_1nac, muj_no_nac_vera } dato;
 
 typedef int tvecnaciones [MAX_NAC];
 
@@ -36,6 +37,7 @@ typedef struct{
 	
 	char apellido_nombre[MAX];
 	char nacimiento[MAX_FECHA];
+	char apellido[MAX];
 	char sexo;
 	tvecnaciones vecnaciones;
 	bool nac_mayor_2000; // dato que devuelve 0 (FALSE) para empleados nacidos antes del 2000 y devuelve 1 (TRUE) para empleados nacidos despues del 2000.
@@ -266,10 +268,22 @@ bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
 	return aux_bool;
 }
 
+cargar_apellido (templeado emp, char apelli[MAX]){
+	
+	int i=0;
+	
+	while (emp.apellido_nombre[i]!=',') {
+		
+		apelli[i]=emp.apellido_nombre[i];
+		i++;
+	}
+}
+
 void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, int *cant_2nacio, int *cant_F_verano, tvecempleados vemp){
 	
 	int i=0, cant_mas_jovenes2000=0, cant_argentinos=0, cant_arg_uru=0, cant_muj_verano=0;
 	bool es_verano=false;
+	char apellido[MAX];
 	char fecha[MAX_FECHA];
 	
 	do{
@@ -282,6 +296,9 @@ void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, i
 		if (*vemp[i].apellido_nombre != 'f'){
 		
 			fflush(stdin);
+			
+			cargar_apellido(vemp[i], apellido);
+			strcpy(vemp[i].apellido, apellido);
 			
 			printf ("\n|-Ingrese fecha de nacimiento (aaaa-mm-dd): \n");
 			fgets (fecha, MAX, stdin);
@@ -346,7 +363,8 @@ void ordenar_vector (tvecempleados emp, int minimo, int maximo, dato dat) {
 			
 			if (((dat==nac_mayor_2000) && (emp[j].nac_mayor_2000>emp[j+1].nac_mayor_2000)) || 
 			((dat==arg_uru_1nac) && (emp[j].arg_uru_1nac>emp[j+1].arg_uru_1nac)) ||
-			((dat==apellido_nombre) && (strcmp(emp[j].apellido_nombre, emp[j+1].apellido_nombre)>0)) ||
+			((dat==apellido) && (strcmp(emp[j].apellido, emp[j+1].apellido)>0)) ||
+			((dat==muj_no_nac_vera) && (emp[j].muj_no_nac_vera>emp[j+1].muj_no_nac_vera)) ||
 			((dat==fecha) && (strcmp(emp[j].nacimiento, emp[j+1].nacimiento)>0))){
 				
 				aux_emp=emp[j];
@@ -448,22 +466,22 @@ void buscar_por_apellido (tvecempleados emp, int ml, int cant_F_nacidas_ver){
 	bool es_igual=false;
 	
 	ordenar_vector (emp, min_pos_vec, ml, dato_muj_no_nac_vera);
-	ordenar_vector (emp, min_pos_vec, cant_F_nacidas_ver, dato_ape_nomb);
+	ordenar_vector (emp, min_pos_vec, cant_F_nacidas_ver, dato_ape);
 	
 	printf("\nIngrese un apellido para buscar coincidencias:\n");
 	fflush(stdin);
 	fgets(aux_apellido, MAX, stdin);	
 	
-	while ((i<cant_F_nacidas_ver) && (es_igual==false)){
+	while ((i<(cant_F_nacidas_ver+1)) && (es_igual==false)){
 		
-		if (strstr(aux_apellido, emp[i].apellido_nombre)!=0){
+		if (strstr(aux_apellido, emp[i].apellido)!=0){
 			
 			j=i;
 			es_igual=true;
 			
-			while ((j<cant_F_nacidas_ver) && (es_igual==true)){
+			while ((j<(cant_F_nacidas_ver+1)) && (es_igual==true)){
 				
-				if (strstr(aux_apellido, emp[j].apellido_nombre)!=0){
+				if (strstr(aux_apellido, emp[j].apellido)!=0){
 					
 					j++;
 				}
@@ -481,7 +499,7 @@ void buscar_por_apellido (tvecempleados emp, int ml, int cant_F_nacidas_ver){
 		}
 	}
 	
-	mostrar_vector (emp, i, j);
+	mostrar_vector (emp, i, (j-1));
 }
 
 void opciones_a_ejecutar (int ml, int cant_antes_2000, int cant_arg_uru_2nacio, int cant_F_nacidas_ver, int cant_arg, tvecempleados emp, int opcion) {
