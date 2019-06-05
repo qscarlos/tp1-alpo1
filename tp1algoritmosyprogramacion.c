@@ -266,7 +266,7 @@ bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
 	return aux_bool;
 }
 
-cargar_apellido (templeado emp, char apelli[MAX]){
+void cargar_apellido (templeado emp, char apelli[MAX]){
 	
 	int i=0;
 	
