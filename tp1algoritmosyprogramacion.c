@@ -527,7 +527,6 @@ int main (){
 	
 	int ml, cant_antes_2000, cant_arg_uru_2nacio, cant_F_nacidas_ver, cant_arg; 
 	int opciones;
-	int pos_minima, pos_maxima;
 	tvecempleados vemp;
 	
 	cargar_datos (&ml, &cant_antes_2000, &cant_arg, &cant_arg_uru_2nacio, &cant_F_nacidas_ver, vemp);
