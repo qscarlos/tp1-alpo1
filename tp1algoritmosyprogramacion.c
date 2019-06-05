@@ -207,9 +207,7 @@ void obtener_nacionalidad(tvecnaciones vecnaciones){
 	while (opc != 0){
 		
 		vecnaciones[opc] = 1;
-    //		cant_nac = cant_nac + 1;		
-		printf ("\n|-Elija otra nacionalidad o 0 para salir: ");
-		fflush (stdin);
+                fflush (stdin);
 		scanf ("%i", &opc);
 		validar_datos (&opc, MAX_NAC, 0);	
 	}
@@ -269,8 +267,9 @@ bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
 void cargar_apellido (templeado emp, char apelli[MAX]){
 	
 	int i=0;
+	int cant=strlen(emp.apellido_nombre)-1;
 	
-	while (emp.apellido_nombre[i]!=',') {
+	while ((i<cant) && (emp.apellido_nombre[i]!=',')){
 		
 		apelli[i]=emp.apellido_nombre[i];
 		i++;
