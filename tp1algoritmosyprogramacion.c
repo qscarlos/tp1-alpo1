@@ -32,7 +32,6 @@ typedef enum { apellido_nombre, apellido, fecha, sexo, ciudadania, nac_mayor_200
 
 typedef int tvecnaciones [MAX_NAC];
 
-//typedef tnacion vecnacion[7];
 typedef struct{
 	
 	char apellido_nombre[MAX];
@@ -42,8 +41,7 @@ typedef struct{
 	tvecnaciones vecnaciones;
 	bool nac_mayor_2000; // dato que devuelve 0 (FALSE) para empleados nacidos antes del 2000 y devuelve 1 (TRUE) para empleados nacidos despues del 2000.
 	bool arg_uru_1nac; // dato que retorna 0 (FALSE) para empleados arg o uru con 2 o mas nacionalidades y retorna 1 (TRUE) para otra condicion de nacionalidad.
-	bool muj_no_nac_vera;    
-	//vecnacion naciones;
+	bool muj_no_nac_vera;// dato que retorna 0 (FALSE) para empleadas mujeres nacidas en verano y retorna 1 (TRUE) para otra condicion de sexo y estacion del año.
 	
 }templeado;
 
