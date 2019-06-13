@@ -109,7 +109,7 @@ void validar_fecha (int *dia, int *mes, int *anio){
 	}
 }
 
-void pasar_enteros_a_validar (char texto[MAX_FECHA], bool *estacion_verano) {
+void calcular_datos_fecha (char texto[MAX_FECHA], bool *estacion_verano) {
 	
 	char aux_fecha[MAX_FECHA];
 	strcpy(aux_fecha, texto);
@@ -255,17 +255,6 @@ bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
 	return aux_bool;
 }
 
-void cargar_apellido (templeado *emp){
-	
-	int i=0;
-	
-	while (emp->apellido_nombre[i]!=','){
-		
-		emp->apellido[i]=emp->apellido_nombre[i];
-		i++;
-	}
-}
-
 void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, int *cant_2nacio, int *cant_F_verano, tvecempleados vemp){
 	
 	int i=0, j, cant_mas_jovenes2000=0, cant_argentinos=0, cant_arg_uru=0, cant_muj_verano=0;
@@ -283,11 +272,17 @@ void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, i
 		
 			fflush(stdin);
 			
-			cargar_apellido(&vemp[i]);
+			j=0;
+			
+			while (vemp[i].apellido_nombre[j]!=','){
+				
+				vemp[i].apellido[j]=vemp[i].apellido_nombre[j];
+				j++;
+			}
 			
 			printf ("\n|-Ingrese fecha de nacimiento (aaaa-mm-dd): \n");
 			fgets (fecha, MAX, stdin);
-			pasar_enteros_a_validar(fecha, &es_verano);
+			calcular_datos_fecha(fecha, &es_verano);
 			strcpy(vemp[i].nacimiento, fecha);
 			printf ("\n");	
 			
@@ -366,25 +361,9 @@ void ordenar_vector (tvecempleados emp, int minimo, int maximo, dato dat) {
 	}
 }
 
-void mostrar_nacionalidad (templeado emp) {
-	
-	int i;
-	
-	printf("Nacionalidad/es: ");
-	
-	for (i=1; i<MAX_NAC; i++){
-		
-		if (emp.vecnaciones[i]==true){
-			
-			printf("%s ", ((i==argentina) ? print_arg : (i==uruguaya) ? print_uru : (i==chilena) ? print_chi :
-		    (i==peruana) ? print_per : (i==boliviana) ? print_bol : (i==paraguaya) ? print_par : print_bra));
-		}
-	}
-}
-
 void mostrar_vector (tvecempleados emp, int cant_min, int cant_max){
 	
-	int i;
+	int i, j;
 	
 	printf("\n");
 	
@@ -398,9 +377,18 @@ void mostrar_vector (tvecempleados emp, int cant_min, int cant_max){
 		    
 		    printf("Sexo: %c\n", emp[i].sexo);
 		    
-		    mostrar_nacionalidad (emp[i]);
+		    printf("Nacionalidad/es: ");
 		    
-		    printf("\n\n");
+		    for (j=1; j<MAX_NAC; j++){
+		    	
+		    	if (emp[i].vecnaciones[j]==true){
+		    		
+		    		printf("%s ", ((j==argentina) ? print_arg : (j==uruguaya) ? print_uru : (j==chilena) ? print_chi :
+		            (j==peruana) ? print_per : (j==boliviana) ? print_bol : (j==paraguaya) ? print_par : print_bra));
+				}
+			}
+			
+			printf("\n\n");
 		}
 	}
 	
