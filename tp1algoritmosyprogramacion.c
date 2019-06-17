@@ -206,7 +206,6 @@ void obtener_nacionalidad(tvecnaciones vecnaciones){
 bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
 	
 	int i=2, aux_cant=0;
-	char aux_fecha;
 	bool aux_bool=false;
 	
 	switch (var){
