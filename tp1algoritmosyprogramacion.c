@@ -11,9 +11,8 @@
 #define dato_fecha 2
 #define dato_sexo 3
 #define dato_nac 4
-#define dato_nac_mayor_2000 5
-#define dato_arg_uru_1nac 6
-#define dato_muj_no_nac_vera 7
+#define dato_arg_uru_1nac 5
+#define dato_muj_no_nac_vera 6
 #define print_arg "argentina"
 #define print_uru "uruguaya"
 #define print_chi "chilena"
@@ -27,7 +26,7 @@ typedef enum {false, true} bool;
 
 enum {argentina = 1, uruguaya, chilena, peruana, boliviana, paraguaya, brasilera} naciones;
 
-typedef enum { apellido_nombre, apellido, fecha, sexo, ciudadania, nac_mayor_2000, arg_uru_1nac, muj_no_nac_vera } dato;
+typedef enum {apellido_nombre, apellido, fecha, sexo, ciudadania, arg_uru_1nac, muj_no_nac_vera} dato;
 
 typedef int tvecnaciones [MAX_NAC];
 
@@ -38,7 +37,6 @@ typedef struct{
 	char apellido[MAX];
 	char sexo;
 	tvecnaciones vecnaciones;
-	bool nac_mayor_2000; // dato que devuelve 0 (FALSE) para empleados nacidos antes del 2000 y devuelve 1 (TRUE) para empleados nacidos despues del 2000.
 	bool arg_uru_1nac; // dato que retorna 0 (FALSE) para empleados arg o uru con 2 o mas nacionalidades y retorna 1 (TRUE) para otra condicion de nacionalidad.
 	bool muj_no_nac_vera;// dato que retorna 0 (FALSE) para empleadas mujeres nacidas en verano y retorna 1 (TRUE) para otra condicion de sexo y estacion del año.
 	
@@ -213,14 +211,6 @@ bool validar_dato_booleano (templeado emp, bool verano_si, dato var) {
 	
 	switch (var){
 		
-		case dato_nac_mayor_2000:
-			
-			if (strcmp(emp.nacimiento, "2000-01-01")>=0){
-				
-				aux_bool=true;
-			}
-			break;
-		
 		case dato_arg_uru_1nac:
 			
 			if ((emp.vecnaciones[1]==true) || (emp.vecnaciones[2]==true)){
@@ -284,10 +274,8 @@ void cargar_datos (int *ml, int *cantidad_nacidos_antes_2000, int *cant_argen, i
 			fgets (fecha, MAX, stdin);
 			calcular_datos_fecha(fecha, &es_verano);
 			strcpy(vemp[i].nacimiento, fecha);
-			printf ("\n");	
 			
-			vemp[i].nac_mayor_2000=validar_dato_booleano(vemp[i], es_verano, dato_nac_mayor_2000);
-			if (vemp[i].nac_mayor_2000==false){
+			if (strcmp(vemp[i].nacimiento, "2000-01-01")<0){
 				
 				cant_mas_jovenes2000++;
 			}
@@ -341,8 +329,7 @@ void ordenar_vector (tvecempleados emp, int minimo, int maximo, dato dat) {
 		
 		for (j=minimo; j<(maximo-i); j++) {
 			
-			if (((dat==nac_mayor_2000) && (emp[j].nac_mayor_2000>emp[j+1].nac_mayor_2000)) || 
-			((dat==arg_uru_1nac) && (emp[j].arg_uru_1nac>emp[j+1].arg_uru_1nac)) ||
+			if (((dat==arg_uru_1nac) && (emp[j].arg_uru_1nac>emp[j+1].arg_uru_1nac)) ||
 			((dat==apellido) && (strcmp(emp[j].apellido, emp[j+1].apellido)>0)) ||
 			((dat==muj_no_nac_vera) && (emp[j].muj_no_nac_vera>emp[j+1].muj_no_nac_vera)) ||
 			((dat==fecha) && (strcmp(emp[j].nacimiento, emp[j+1].nacimiento)>0))){
@@ -467,8 +454,7 @@ void opciones_a_ejecutar (int ml, int cant_antes_2000, int cant_arg_uru_2nacio, 
 		
 		case 1:
 			
-			ordenar_vector (emp, min_pos_vec, ml, dato_nac_mayor_2000);
-			ordenar_vector (emp, min_pos_vec, cant_antes_2000, dato_fecha);
+			ordenar_vector (emp, min_pos_vec, ml, dato_fecha);
 			mostrar_vector (emp, min_pos_vec, cant_antes_2000);
 			break;
 			
