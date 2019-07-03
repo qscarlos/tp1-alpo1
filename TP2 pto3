@@ -1,0 +1,42 @@
+# tp2-pto3
+#include<stdio.h>
+/*
+3) Sabiendo que existe un Archivo llamado SucMundo.dat que contiene la información de todas las sucursales
+del mundo excepto las argentinas, se pide actualizar el archivo SucMundo.dat insertando las sucursales
+argentinas. El archivo tiene el mismo formato de registro que el archivo SucursalesArg. 
+El archivo actualizado debe quedar con el mismo orden que el archivo SucMundo.dat.
+
+2) El archivo contiene las sucursales Argentinas En este momento son 80 y esta ordenado por Num_Sucursal.
+Clave: Num_Sucursal. Existe un registro por cada Num_Sucursal.
+-SucursalesArg
+{Num_Sucursal Numérico
+Nombre 30 Caracteres
+País 50 Caracteres
+Dirección 50 Caracteres
+Telefono 20 Caracteres}
+*/
+typedef struct
+{
+	int Num_Sucursal;
+	char Nombre[30];
+	char Pais[50];
+	char Direccion[50];
+	char Telefono[20];
+}SucursalesArg;
+void Actualizacion(FILE *Suc_Arg, FILE *SucMundo)
+{
+	SucursalesArg suc_arg,suc_mundo;
+	fread(&suc_arg,sizeof(suc_arg),1,Suc_Arg);
+	while(!feof(SucMundo) && !feof(Suc_Arg))
+	fwrite(&suc_mundo,sizeof(suc_mundo),1,SucMundo);
+	fread(&suc_arg,sizeof(suc_arg),1,Suc_Arg);	
+}
+int main()
+{
+	FILE *Suc_Arg=fopen("INSERTE LINK AQUI","br");
+	FILE *SucMundo=fopen("INSERTE LINK AQUI","ba");
+	Actualizacion(Suc_Arg,SucMundo);
+	fclose(FILE *Suc_Arg);
+	fclose(FILE *SucMundo);
+	return 0;
+}
