@@ -1,0 +1,836 @@
+//Codigo para cargar sucursales mundiales
+#include<stdio.h>
+#include<string.h>
+
+#define max_nom 30
+#define max 50
+#define max_tel 20
+
+typedef struct {
+	
+	int num_sucursal;
+	char nombre[max_nom];
+	char pais[max];
+	char direccion[max];
+	char telefono[max_tel];
+} t_suc;
+
+void actualizar_por_mezcla(FILE *Arg, FILE *Mun, FILE *Act){
+	
+	t_suc arg, mun;
+	
+	rewind(Arg);
+	rewind(Mun);
+	
+	fread(&arg, sizeof(arg), 1, Arg);
+	fread(&mun, sizeof(mun), 1, Mun);
+	
+	while ((!feof(Arg)) && (!feof(Mun))){
+		
+		if (arg.num_sucursal<mun.num_sucursal){
+			
+			fwrite(&arg, sizeof(arg), 1, Act);
+			fread(&arg, sizeof(arg), 1, Arg);
+		}else{
+			
+			fwrite(&mun, sizeof(mun), 1, Act);
+			fread(&mun, sizeof(mun), 1, Mun);
+		}
+	}
+	
+	while (!feof(Arg)){
+		
+		fwrite(&arg, sizeof(arg), 1, Act);
+		fread(&arg, sizeof(arg), 1, Arg);
+	}
+	
+	while (!feof(Mun)){
+		
+		fwrite(&mun, sizeof(mun), 1, Act);
+		fread(&mun, sizeof(mun), 1, Mun);
+	}
+}
+
+void mostrar_datos(FILE *arch){
+	
+	t_suc suc;
+	
+	rewind(arch);
+	
+	fread(&suc, sizeof(suc), 1, arch);
+	
+	printf("-Sucursales Mundiales:\n\n");
+	
+	while (!feof(arch)){
+		
+		printf("Num sucursal: %d\nPais: %sNombre: %sDireccion: %sTelefono: %s\n", suc.num_sucursal, suc.pais, suc.nombre, suc.direccion, suc.telefono);
+		
+		fread(&suc, sizeof(suc), 1, arch);
+	}
+}
+
+int main(){
+	
+	FILE *SucursalesArg;
+	FILE *SucMundo;
+	FILE *SucMundoAct;
+	
+	SucursalesArg=fopen("SucursalesArg.dat", "rb");
+	SucMundo=fopen("SucMundo.dat", "rb");
+	SucMundoAct=fopen("SucMundoAct.dat", "wb+");
+	
+	if ((SucursalesArg==NULL) || (SucMundo==NULL) || (SucMundoAct==NULL)){
+		
+		printf("\nNo se pudo crear el archivo.\n");
+	}else{
+		
+		actualizar_por_mezcla(SucursalesArg, SucMundo, SucMundoAct);
+		mostrar_datos(SucMundoAct);
+		
+		fclose(SucMundoAct);
+		fclose(SucursalesArg);
+		fclose(SucMundo);
+	}
+	
+	return 0;
+}
+
+//Codigo para cargar sucursales argentina
+#include<stdio.h>
+#include<string.h>
+
+#define max_nom 30
+#define max 50
+#define max_tel 20
+
+typedef struct {
+	
+	int num_sucursal;
+	char nombre[max_nom];
+	char pais[max];
+	char direccion[max];
+	char telefono[max_tel];
+} t_suc;
+
+void cargar_datos (FILE *arch){
+	
+	t_suc suc;
+	int i=0;
+	
+	printf("A continuacion, le voy a solicitar que cargue los datos de las sucursales argentinas:\n\n");
+	
+	do{
+		
+		printf("Ingrese el numero de sucursal (para finalizar ingrese 0): ");
+		fflush(stdin);
+		scanf("%d", &suc.num_sucursal);
+		
+		if ((suc.num_sucursal!=0) && (i<80)){
+			
+			printf("Ingrese el nombre de la sucursal: ");
+		    fflush(stdin);
+		    fgets(suc.nombre, max_nom, stdin);
+		
+		    printf("Ingrese el pais: ");
+		    fflush(stdin);
+		    fgets(suc.pais, max, stdin);
+		
+		    printf("Ingrese la direccion: ");
+		    fflush(stdin);
+		    fgets(suc.direccion, max, stdin);
+		
+		    printf("Ingrese el telefono: ");
+		    fflush(stdin);
+		    fgets(suc.telefono, max_tel, stdin);
+		
+		    fwrite(&suc, sizeof(suc), 1, arch);
+		    i++;
+		    printf("\n");
+		}
+	} while ((suc.num_sucursal!=0) && (i<80));
+}
+
+void mostrar_datos(FILE *arch){
+	
+	t_suc suc;
+	
+	rewind(arch);
+	
+	fread(&suc, sizeof(suc), 1, arch);
+	
+	printf("\n-Sucursales argentinas:\n");
+	
+	while (!feof(arch)){
+		
+		printf("\nNumero: %d\nNombre: %sDireccion: %sTelefono: %s", suc.num_sucursal, suc.nombre, suc.direccion, suc.telefono);
+		
+		fread(&suc, sizeof(suc), 1, arch);
+	}
+}
+
+int main(){
+	
+	FILE *SucursalesArg;
+	SucursalesArg=fopen("SucursalesArg.dat", "wb+");
+	
+	if (SucursalesArg==NULL){
+		
+		printf("\nNo se pudo crear el archivo.\n");
+	}else{
+		
+		cargar_datos(SucursalesArg);
+		mostrar_datos(SucursalesArg);
+		fclose(SucursalesArg);
+	}
+	
+	return 0;
+}
+
+//Codigo para el historico de ventas
+#include<stdio.h>
+
+typedef struct {
+	
+	int anio;
+	int mes;
+	int num_sucursal;
+	float importe;
+} t_vts_his;
+
+void cargar_datos (FILE *arch){
+	
+	t_vts_his vts;
+	
+	printf("A continuacion, le voy a solicitar que cargue los datos de las ventas de los ultimos 20 anios:\n\n");
+	
+	do{
+		
+		printf("Ingrese el numero de sucursal (para finalizar ingrese 0): ");
+		fflush(stdin);
+		scanf("%d", &vts.num_sucursal);
+		
+		if (vts.num_sucursal!=0){
+			
+			printf("Ingrese el anio de venta: ");
+			fflush(stdin);
+			scanf("%d", &vts.anio);
+			
+			printf("Ingrese el mes de venta: ");
+			fflush(stdin);
+			scanf("%d", &vts.mes);
+			
+			printf("Ingrese el importe vendido: ");
+			fflush(stdin);
+			scanf("%f", &vts.importe);
+			
+			fwrite(&vts, sizeof(vts), 1, arch);
+			printf("\n");
+		}
+	} while (vts.num_sucursal!=0);
+}
+
+void mostrar_datos(FILE *arch){
+	
+	t_vts_his his;
+	
+	rewind(arch);
+	
+	fread(&his, sizeof(his), 1, arch);
+	
+	printf("\n-Ventas historicas:\n\n");
+	
+	while (!feof(arch)){
+		
+		printf("Num de sucursal: %d\nAnio: %d\nMes: %d\nImporte: $%.2f\n\n", his.num_sucursal, his.anio, his.mes, his.importe);
+		
+		fread(&his, sizeof(his), 1, arch);
+	}
+}
+
+int main(){
+	
+	FILE *VentasHistorico;
+	VentasHistorico=fopen("VentasHistorico.dat", "wb+");
+	
+	if (VentasHistorico==NULL){
+		
+		printf("\nNo se pudo crear el archivo\n");
+	}else{
+		
+		cargar_datos(VentasHistorico);
+		mostrar_datos(VentasHistorico);
+		
+		fclose(VentasHistorico);
+	}
+	
+	return 0;
+}
+
+//Codigo para las ventas argentinas del 2018
+#include<stdio.h>
+#include<string.h>
+
+#define max_fecha 9
+
+typedef struct {
+	
+	char fecha[max_fecha];
+	int num_cliente;
+	int num_sucursal;
+	int articulo;
+	int cantidad;
+	float importe;
+} t_vts_arg;
+
+void cargar_datos(FILE *arch){
+	
+	t_vts_arg vts;
+	int i=0;
+	
+	printf("A continuacion, le voy a solicitar que cargue los datos de las ventas de las sucursales argentinas durante el 2018:\n\n");
+	
+	do{
+		
+		printf("Ingrese el numero de sucursal (para finalizar ingrese 0): ");
+		fflush(stdin);
+		scanf("%d", &vts.num_sucursal);
+		
+		if ((vts.num_sucursal!=0) && (i<8000)){
+			
+			printf("Ingrese la fecha de venta (formato AAAAMMDD): ");
+			fflush(stdin);
+			fgets(vts.fecha, max_fecha, stdin);
+			
+			printf("Ingrese el numero de cliente: ");
+			fflush(stdin);
+			scanf("%d", &vts.num_cliente);
+			
+			printf("Ingrese el codigo del articulo: ");
+			fflush(stdin);
+			scanf("%d", &vts.articulo);
+			
+			printf("Ingrese la cantidad de articulos vendidos: ");
+			fflush(stdin);
+			scanf("%d", &vts.cantidad);
+			
+			printf("Ingrese el importe de la venta: ");
+			fflush(stdin);
+			scanf("%f", &vts.importe);
+			
+			fwrite(&vts, sizeof(vts), 1, arch);
+			i++;
+			printf("\n");
+		}
+	} while ((vts.num_sucursal!=0) && (i<8000));
+}
+
+void mostrar_datos(FILE *arch){
+	
+	t_vts_arg arg;
+	
+	rewind(arch);
+	
+	fread(&arg, sizeof(arg), 1, arch);
+	
+	printf("\n-Ventas de sucursales argentinas durante el 2018:\n");
+	
+	while (!feof(arch)){
+		
+		printf("\nNum Sucursal: %d\nFecha: %s\nNum Cliente: %d\nArticulo: %d\nCantidad: %d\nImporte: $%.2f\n", 
+		arg.num_sucursal, arg.fecha, arg.num_cliente, arg.articulo, arg.cantidad, arg.importe);
+		
+		fread(&arg, sizeof(arg), 1, arch);
+	}
+}
+
+int main(){
+	
+	FILE *VentasArg2018;
+	VentasArg2018=fopen("VentasArg2018.dat", "wb+");
+	
+	if (VentasArg2018==NULL){
+		
+		printf("\nNo se pudo abrir el archivo\n");
+	} else{
+		
+		cargar_datos(VentasArg2018);
+		mostrar_datos(VentasArg2018);
+		
+		fclose(VentasArg2018);
+	}
+	
+	return 0;
+}
+
+//Codigo para cargar clientes
+#include<stdio.h>
+#include<string.h>
+
+#define max 50
+#define max_nom 30
+
+typedef struct {
+	
+	int num_cliente;
+	char nombre[max_nom];
+	char provincia[max];
+	char localidad[max];
+	char direccion[max];
+} t_cli;
+
+void cargar_datos(FILE *arch){
+	
+	t_cli cli;
+	long i=0;
+	
+	printf("A continuacion, le voy a solicitar que cargue los datos de los clientes argentinos:\n\n");
+	
+	do{
+		
+		printf("Ingrese el numero de cliente (para finalizar ingrese 0): ");
+		fflush(stdin);
+		scanf("%d", &cli.num_cliente);
+		
+		if ((cli.num_cliente!=0) && (i<90000)){
+			
+			printf("Ingrese el nombre: ");
+			fflush(stdin);
+			fgets(cli.nombre, max_nom, stdin);
+			
+			printf("Ingrese la provincia: ");
+			fflush(stdin);
+			fgets(cli.provincia, max, stdin);
+			
+			printf("Ingrese la localidad: ");
+			fflush(stdin);
+			fgets(cli.localidad, max, stdin);
+			
+			printf("Ingrese la direccion: ");
+			fflush(stdin);
+			fgets(cli.direccion, max, stdin);
+			
+			fwrite(&cli, sizeof(cli), 1, arch);
+			i++;
+			printf("\n");
+		}
+	} while ((cli.num_cliente!=0) && (i<90000));
+}
+
+void mostrar_datos(FILE *arch){
+	
+	t_cli cli;
+	
+	rewind(arch);
+	
+	fread(&cli, sizeof(cli), 1, arch);
+	
+	printf("\n-Clientes argentinos:\n");
+	
+	while (!feof(arch)){
+		
+		printf("\nNumero de cliente: %d\nNombre: %sProvincia: %sLocalidad: %sDireccion: %s", 
+		cli.num_cliente, cli.nombre, cli.provincia, cli.localidad, cli.direccion);
+		
+		fread(&cli, sizeof(cli), 1, arch);
+	}
+}
+
+int main(){
+	
+	FILE *ClientesArg;
+	ClientesArg=fopen("ClientesArg.dat", "wb+");
+	
+	if (ClientesArg==NULL){
+		
+		printf("\nNo se pudo crear el archivo.\n");
+	} else{
+		
+		cargar_datos(ClientesArg);
+		mostrar_datos(ClientesArg);
+		
+		fclose(ClientesArg);
+	}
+	
+	return 0;
+}
+
+//Punto 1
+#include<stdio.h>
+#include<string.h>
+
+#define max_fecha 9
+#define max_mes 13
+
+typedef struct {
+	
+	int anio;
+	int mes;
+	int num_sucursal;
+	float importe;
+} t_vts_his;
+
+typedef struct {
+	
+	char fecha[max_fecha];
+	int num_cliente;
+	int num_sucursal;
+	int articulo;
+	int cantidad;
+	float importe;
+} t_vts_arg;
+
+typedef t_vts_his vec_his[max_mes];
+
+int calcular_mes(t_vts_arg arg){
+	
+	int i, j=0;
+	int mes;
+	char aux_mes[3];
+	
+	for (i=4; i<6; i++){
+		
+		aux_mes[j]=arg.fecha[i];
+		j++;
+	}
+	
+	mes=atoi(aux_mes);
+	
+	return mes;
+}
+
+void cargar_vector(vec_his vec, t_vts_arg arg){
+	
+	int i;
+	
+	for (i=1; i<max_mes; i++){
+		
+		vec[i].anio=2018;
+		vec[i].mes=i;
+		vec[i].num_sucursal=arg.num_sucursal;
+		vec[i].importe=0;
+	}
+}
+
+void escribir_en_archivo(FILE *Act, vec_his vec){
+	
+	int i;
+	
+	for (i=1; i<max_mes; i++){
+		
+		if (vec[i].importe!=0){
+			
+			fwrite(&vec[i], sizeof(vec[i]), 1, Act);
+		}
+	}
+}
+
+void actualizar_por_mezcla(FILE *His, FILE *Arg, FILE *Act){
+	
+	t_vts_his his, aux;
+	t_vts_arg arg;
+	vec_his vec;
+	int mes;
+	
+	rewind(His);
+	rewind(Arg);
+	
+	fread(&his, sizeof(his), 1, His);
+	fread(&arg, sizeof(arg), 1, Arg);
+	
+	while ((!feof(His)) && (!feof(Arg))){
+		
+		if (his.num_sucursal==arg.num_sucursal){
+			
+			if (his.anio<2018){
+				
+				fwrite(&his, sizeof(his), 1, Act);
+				fread(&his, sizeof(his), 1, His);
+			}else{
+				
+				cargar_vector(vec, arg);
+				
+				while ((!feof(Arg)) && (vec[1].num_sucursal==arg.num_sucursal)){
+					
+					mes=calcular_mes(arg);
+					vec[mes].importe=vec[mes].importe+arg.importe;
+					fread(&arg, sizeof(arg), 1, Arg);
+				}
+				
+				escribir_en_archivo(Act, vec);
+			}
+		}else{
+			
+			if (his.num_sucursal<arg.num_sucursal){
+				
+				fwrite(&his, sizeof(his), 1, Act);
+				fread(&his, sizeof(his), 1, His);
+			}else{
+				
+				cargar_vector(vec, arg);
+				
+				while ((!feof(Arg)) && (vec[1].num_sucursal==arg.num_sucursal)){
+					
+					mes=calcular_mes(arg);
+					vec[mes].importe=vec[mes].importe+arg.importe;
+					fread(&arg, sizeof(arg), 1, Arg);
+				}
+				
+			    escribir_en_archivo(Act, vec);
+			}
+		}
+	}
+	
+	while (!feof(His)){
+		
+		fwrite(&his, sizeof(his), 1, Act);
+		fread(&his, sizeof(his), 1, His);
+	}
+	
+	while (!feof(Arg)){
+		
+		cargar_vector(vec, arg);
+				
+		while ((!feof(Arg)) && (vec[1].num_sucursal==arg.num_sucursal)){
+					
+			mes=calcular_mes(arg);
+			vec[mes].importe=vec[mes].importe+arg.importe;
+			fread(&arg, sizeof(arg), 1, Arg);
+		}
+				
+		escribir_en_archivo(Act, vec);
+	}
+}
+
+void mostrar_datos(FILE *Act){
+	
+	t_vts_his reg;
+	
+	rewind(Act);
+	
+	fread(&reg, sizeof(reg), 1, Act);
+	
+	printf("Num Suc/ Anio/ \tMes/ \tImporte\n");
+	
+	while (!feof(Act)){
+		
+		printf("\n%d \t %d \t%d \t$%.2f", reg.num_sucursal, reg.anio, reg.mes, reg.importe);
+		
+		fread(&reg, sizeof(reg), 1, Act);
+	}
+}
+
+int main(){
+	
+	FILE *VentasHistorico;
+	FILE *VentasArg2018;
+	FILE *VentasAct;
+	
+	VentasHistorico=fopen("VentasHistorico.dat", "rb");
+	VentasArg2018=fopen("VentasArg2018.dat", "rb");
+	VentasAct=fopen("VentasAct.dat", "wb+");
+	
+	if ((VentasHistorico==NULL) || (VentasArg2018==NULL) || (VentasAct==NULL)){
+		
+		printf("\nNo se pudo abrir el archivo\n");
+	}else{
+		
+		actualizar_por_mezcla(VentasHistorico, VentasArg2018, VentasAct);
+		mostrar_datos(VentasAct);
+		
+		fclose(VentasAct);
+		fclose(VentasHistorico);
+		fclose(VentasArg2018);
+	}
+	
+	return 0;
+}
+
+//Punto 2
+#include<stdio.h>
+#include<string.h>
+
+#define max 50
+#define max_nom 30
+
+typedef struct {
+	
+	int num_cliente;
+	char nombre[max_nom];
+	char provincia[max];
+	char localidad[max];
+	char direccion[max];
+} t_cli;
+
+void corte_control(FILE *arg, FILE *tot){
+	
+	char prov_ant[max], loc_ant[max];
+	int suma_prov, suma_loc;
+	t_cli cli;
+	char aux[max];
+	
+	rewind(arg);
+	
+	fread(&cli, sizeof(cli), 1, arg);
+	fprintf(tot,"-Clientes totales por localidad y por provincia:\n\n");
+	
+	while (!feof(arg)){
+		
+		suma_prov=0;
+		strcpy(prov_ant, cli.provincia);
+		
+		while ((!feof(arg)) && (strcmp(prov_ant, cli.provincia)==0)){
+			
+			suma_loc=0;
+		    strcpy(loc_ant, cli.localidad);
+			
+			while ((!feof(arg)) && (strcmp(prov_ant, cli.provincia)==0) && (strcmp(loc_ant, cli.localidad)==0)){
+				
+				suma_loc++;
+				suma_prov++;
+				fread(&cli, sizeof(cli), 1, arg);
+			}
+			
+			sprintf(aux, "%d", suma_loc);
+			fprintf(tot, "Provincia: %sLocalidad: %sTotal: %s\n", prov_ant, loc_ant, aux);
+	    }
+	    
+	   sprintf(aux, "%d", suma_prov);
+	   fprintf(tot, "\nProvincia: %sTotal: %s\n\n", prov_ant, aux);
+	}
+}
+
+void mostrar_datos(FILE *TotCli){
+	
+	char texto[max];
+	
+	rewind(TotCli);
+	
+	fgets(texto, max, TotCli);
+	
+	while (!feof(TotCli)){
+		
+		printf("%s", texto);
+		
+		fgets(texto, max, TotCli);
+	}
+}
+
+int main(){
+	
+	FILE *ClientesArg;
+	FILE *Tot_Cli;
+	
+	ClientesArg=fopen("ClientesArg.dat", "rb");
+	Tot_Cli=fopen("Tot_Cli.txt", "wt+");
+	
+	if ((ClientesArg==NULL) || (Tot_Cli==NULL)){
+		
+		printf("\nNo se pudo crear el archivo.\n");
+	}else{
+		
+		corte_control(ClientesArg, Tot_Cli);
+		mostrar_datos(Tot_Cli);
+		
+		fclose(Tot_Cli);
+		fclose(ClientesArg);
+	}
+	
+	return 0;
+}
+
+//Punto 3
+#include<stdio.h>
+#include<string.h>
+
+#define max_nom 30
+#define max 50
+#define max_tel 20
+
+typedef struct {
+	
+	int num_sucursal;
+	char nombre[max_nom];
+	char pais[max];
+	char direccion[max];
+	char telefono[max_tel];
+} t_suc;
+
+void actualizar_por_mezcla(FILE *Arg, FILE *Mun, FILE *Act){
+	
+	t_suc arg, mun;
+	
+	rewind(Arg);
+	rewind(Mun);
+	
+	fread(&arg, sizeof(arg), 1, Arg);
+	fread(&mun, sizeof(mun), 1, Mun);
+	
+	while ((!feof(Arg)) && (!feof(Mun))){
+		
+		if (arg.num_sucursal<mun.num_sucursal){
+			
+			fwrite(&arg, sizeof(arg), 1, Act);
+			fread(&arg, sizeof(arg), 1, Arg);
+		}else{
+			
+			fwrite(&mun, sizeof(mun), 1, Act);
+			fread(&mun, sizeof(mun), 1, Mun);
+		}
+	}
+	
+	while (!feof(Arg)){
+		
+		fwrite(&arg, sizeof(arg), 1, Act);
+		fread(&arg, sizeof(arg), 1, Arg);
+	}
+	
+	while (!feof(Mun)){
+		
+		fwrite(&mun, sizeof(mun), 1, Act);
+		fread(&mun, sizeof(mun), 1, Mun);
+	}
+}
+
+void mostrar_datos(FILE *arch){
+	
+	t_suc suc;
+	
+	rewind(arch);
+	
+	fread(&suc, sizeof(suc), 1, arch);
+	
+	printf("-Sucursales Mundiales:\n\n");
+	
+	while (!feof(arch)){
+		
+		printf("Num sucursal: %d\nPais: %sNombre: %sDireccion: %sTelefono: %s\n", suc.num_sucursal, suc.pais, suc.nombre, suc.direccion, suc.telefono);
+		
+		fread(&suc, sizeof(suc), 1, arch);
+	}
+}
+
+int main(){
+	
+	FILE *SucursalesArg;
+	FILE *SucMundo;
+	FILE *SucMundoAct;
+	
+	SucursalesArg=fopen("SucursalesArg.dat", "rb");
+	SucMundo=fopen("SucMundo.dat", "rb");
+	SucMundoAct=fopen("SucMundoAct.dat", "wb+");
+	
+	if ((SucursalesArg==NULL) || (SucMundo==NULL) || (SucMundoAct==NULL)){
+		
+		printf("\nNo se pudo crear el archivo.\n");
+	}else{
+		
+		actualizar_por_mezcla(SucursalesArg, SucMundo, SucMundoAct);
+		mostrar_datos(SucMundoAct);
+		
+		fclose(SucMundoAct);
+		fclose(SucursalesArg);
+		fclose(SucMundo);
+	}
+	
+	return 0;
+}
